@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReceptenBlog.Data;
 
 #nullable disable
 
-namespace ReceptenBlog.Data.Migrations
+namespace ReceptenBlog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241124152848_init1")]
-    partial class init1
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,7 +224,7 @@ namespace ReceptenBlog.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RecipesBlog.Models.Category", b =>
+            modelBuilder.Entity("ReceptenBlog.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -251,7 +248,32 @@ namespace ReceptenBlog.Data.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("RecipesBlog.Models.Recipe", b =>
+            modelBuilder.Entity("ReceptenBlog.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("ReceptenBlog.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -342,15 +364,31 @@ namespace ReceptenBlog.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RecipesBlog.Models.Recipe", b =>
+            modelBuilder.Entity("ReceptenBlog.Models.Comment", b =>
                 {
-                    b.HasOne("RecipesBlog.Models.Category", "Category")
+                    b.HasOne("ReceptenBlog.Models.Recipe", "Recipe")
+                        .WithMany("Comments")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("ReceptenBlog.Models.Recipe", b =>
+                {
+                    b.HasOne("ReceptenBlog.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("ReceptenBlog.Models.Recipe", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RecipesBlog.Models
+namespace ReceptenBlog.Models
 {
     public class Category
     {

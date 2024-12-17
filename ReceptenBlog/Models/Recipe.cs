@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace RecipesBlog.Models
+namespace ReceptenBlog.Models
 {
     public class Recipe
     {
@@ -28,5 +28,8 @@ namespace RecipesBlog.Models
         public DateTime Deleted { get; set; } = DateTime.MaxValue;
 
         public Category? Category { get; set; }
+        
+        public ICollection<Comment> Comments { get; set; }// voor de comments 
+
     }
 }

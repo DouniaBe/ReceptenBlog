@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using RecipesBlog.Models;
+using ReceptenBlog.Models;
+using ReceptenBlog.Models;
 
 namespace ReceptenBlog.Data
 {
@@ -10,7 +11,8 @@ namespace ReceptenBlog.Data
             : base(options)
         {
         }
-        public DbSet<RecipesBlog.Models.Recipe> Recipe { get; set; } = default!;
-        public DbSet<RecipesBlog.Models.Category> Category { get; set; } = default!;
+        public DbSet<ReceptenBlog.Models.Recipe> Recipe { get; set; } = default!;
+        public DbSet<ReceptenBlog.Models.Category> Category { get; set; } = default!;
+        public DbSet<ReceptenBlog.Models.Comment> Comment { get; set; } = default!;
     }
 }

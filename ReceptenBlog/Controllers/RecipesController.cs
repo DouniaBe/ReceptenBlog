@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ReceptenBlog.Data;
-using RecipesBlog.Models;
+using ReceptenBlog.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ReceptenBlog.Controllers
 {
@@ -22,8 +21,9 @@ namespace ReceptenBlog.Controllers
         // GET: Recipes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Recipe.Include(r => r.Category);
-            return View(await applicationDbContext.ToListAsync());
+            // Alleen recepten met de categorieën laden (zonder reacties)
+            var recipes = await _context.Recipe.Include(r => r.Category).ToListAsync();
+            return View(recipes);
         }
 
         // GET: Recipes/Details/5
@@ -35,37 +35,41 @@ namespace ReceptenBlog.Controllers
             }
 
             var recipe = await _context.Recipe
-                .Include(r => r.Category)
+                .Include(r => r.Category)   // Laad de categorie van het recept
+                .Include(r => r.Comments)   // Laad de reacties van het recept
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (recipe == null)
             {
                 return NotFound();
             }
 
-            return View(recipe);
+            return View(recipe); // Geef het recept terug, inclusief de reacties
         }
 
         // GET: Recipes/Create
         public IActionResult Create()
         {
+            // Voeg de lijst van categorieën toe aan de view voor dropdown menu
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name");
             return View();
         }
 
         // POST: Recipes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateCreated,Ingredients,Instructions,CategoryId,Deleted")] Recipe recipe)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,DateCreated,Ingredients,Instructions,CategoryId,Deleted,Comments")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
+                recipe.DateCreated = DateTime.Now;  // Zet de datum van het recept
                 _context.Add(recipe);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();  // Sla het recept op in de database
+                return RedirectToAction(nameof(Index));  // Redirect naar de lijst van recepten
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id", recipe.CategoryId);
+
+            // Als de modelstate niet geldig is, geef dan de view opnieuw weer
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name", recipe.CategoryId);
             return View(recipe);
         }
 
@@ -82,16 +86,14 @@ namespace ReceptenBlog.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id", recipe.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name", recipe.CategoryId);
             return View(recipe);
         }
 
         // POST: Recipes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateCreated,Ingredients,Instructions,CategoryId,Deleted")] Recipe recipe)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,DateCreated,Ingredients,Instructions,Deleted,CategoryId,Comments")] Recipe recipe)
         {
             if (id != recipe.Id)
             {
@@ -118,7 +120,7 @@ namespace ReceptenBlog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Id", recipe.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name", recipe.CategoryId);
             return View(recipe);
         }
 
@@ -147,13 +149,35 @@ namespace ReceptenBlog.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var recipe = await _context.Recipe.FindAsync(id);
-            if (recipe != null)
-            {
-                _context.Recipe.Remove(recipe);
-            }
-
+            _context.Recipe.Remove(recipe);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Add a new comment to a recipe
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(int recipeId, string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return RedirectToAction("Details", new { id = recipeId });
+            }
+
+            // Maak een nieuwe comment aan
+            var comment = new Comment
+            {
+                RecipeId = recipeId,
+                Content = content,
+                DateCreated = DateTime.Now
+            };
+
+            // Voeg de reactie toe aan de database
+            _context.Comment.Add(comment);
+            await _context.SaveChangesAsync();
+
+            // Redirect terug naar de detailpagina van het recept
+            return RedirectToAction("Details", new { id = recipeId });
         }
 
         private bool RecipeExists(int id)

@@ -1,4 +1,4 @@
-﻿@model RecipesBlog.Models.Recipe
+﻿@model ReceptenBlog.Models.Recipe
 
 @{
     ViewData["Title"] = "Create";
@@ -12,6 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Comments" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />

@@ -1,4 +1,4 @@
-﻿using RecipesBlog.Models;
+﻿using ReceptenBlog.Models;
 using Microsoft.EntityFrameworkCore;
 using ReceptenBlog.Data;
 

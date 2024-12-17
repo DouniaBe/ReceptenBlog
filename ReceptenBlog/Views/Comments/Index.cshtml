@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ReceptenBlog.Models.Category>
+﻿@model IEnumerable<ReceptenBlog.Models.Comment>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.DateCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Deleted)
+                @Html.DisplayNameFor(model => model.Recipe)
             </th>
             <th></th>
         </tr>
@@ -28,13 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Content)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Deleted)
+                @Html.DisplayFor(modelItem => item.Recipe.Description)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

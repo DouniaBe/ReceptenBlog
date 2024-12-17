@@ -10,22 +10,23 @@ using ReceptenBlog.Models;
 
 namespace ReceptenBlog.Controllers
 {
-    public class CategoriesController : Controller
+    public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CommentsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Categories
+        // GET: Comments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            var applicationDbContext = _context.Comment.Include(c => c.Recipe);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Categories/Details/5
+        // GET: Comments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,42 @@ namespace ReceptenBlog.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
+            var comment = await _context.Comment
+                .Include(c => c.Recipe)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(comment);
         }
 
-        // GET: Categories/Create
+        // GET: Comments/Create
         public IActionResult Create()
         {
+            ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description");
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: Comments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Deleted")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Content,DateCreated,RecipeId")] Comment comment)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(category);
+                _context.Add(comment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description", comment.RecipeId);
+            return View(comment);
         }
 
-        // GET: Categories/Edit/5
+        // GET: Comments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +77,23 @@ namespace ReceptenBlog.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category.FindAsync(id);
-            if (category == null)
+            var comment = await _context.Comment.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound();
             }
-            return View(category);
+            ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description", comment.RecipeId);
+            return View(comment);
         }
 
-        // POST: Categories/Edit/5
+        // POST: Comments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Deleted")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Content,DateCreated,RecipeId")] Comment comment)
         {
-            if (id != category.Id)
+            if (id != comment.Id)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace ReceptenBlog.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Update(comment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CategoryExists(category.Id))
+                    if (!CommentExists(comment.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +118,11 @@ namespace ReceptenBlog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            ViewData["RecipeId"] = new SelectList(_context.Recipe, "Id", "Description", comment.RecipeId);
+            return View(comment);
         }
 
-        // GET: Categories/Delete/5
+        // GET: Comments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +130,35 @@ namespace ReceptenBlog.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
+            var comment = await _context.Comment
+                .Include(c => c.Recipe)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return View(category);
+            return View(comment);
         }
 
-        // POST: Categories/Delete/5
+        // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Category.FindAsync(id);
-            if (category != null)
+            var comment = await _context.Comment.FindAsync(id);
+            if (comment != null)
             {
-                _context.Category.Remove(category);
+                _context.Comment.Remove(comment);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CategoryExists(int id)
+        private bool CommentExists(int id)
         {
-            return _context.Category.Any(e => e.Id == id);
+            return _context.Comment.Any(e => e.Id == id);
         }
     }
 }
