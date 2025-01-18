@@ -5,7 +5,7 @@ using ReceptenBlog.Models;
 
 namespace ReceptenBlog.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ReceptenblogUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
