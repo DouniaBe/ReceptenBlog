@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ReceptenBlog.Data;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ReceptenBlog.Controllers
 {
+    [Authorize]
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;

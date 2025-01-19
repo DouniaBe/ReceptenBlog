@@ -99,7 +99,7 @@ namespace ReceptenBlog.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
             
             [Display(Name = "User Name")]
             public string UserName { get; set; }
@@ -136,10 +136,11 @@ namespace ReceptenBlog.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
-                await _userStore.SetUserNameAsync(user, Input.FirstName, CancellationToken.None);
+                //await _userStore.SetUserNameAsync(user, Input.FirstName, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
