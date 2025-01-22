@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ReceptenBlog.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;

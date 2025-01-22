@@ -29,9 +29,12 @@
                          <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">Recipe</a>
                         </li>
+                            if (User.IsInRole("UserAdmin"))
+                            {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Category</a>
                         </li>
+                            }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">comment</a>
                         </li>

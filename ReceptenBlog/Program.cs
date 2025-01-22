@@ -4,8 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ReceptenBlog.Data;
 using ReceptenBlog.Models;
-using RecipesBlog.Data;
+using ReceptenBlog.Data;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using RB_Web.Services;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +25,8 @@ builder.Services.AddDefaultIdentity<ReceptenblogUser>(options => options.SignIn.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddControllers();
+//builder.Services.AddTransient<IEmailSender, MailKitEmailSender>();
 
-builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c => 
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ReceptenBlog", Version = "v1" });

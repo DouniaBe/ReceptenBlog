@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ReceptenBlog.Models;
+using SQLitePCL;
+
 
 namespace ReceptenBlog.Areas.Identity.Pages.Account
 {
@@ -149,7 +151,9 @@ namespace ReceptenBlog.Areas.Identity.Pages.Account
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    await _userManager.AddToRoleAsync(user, "USER");
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
                     //var callbackUrl = Url.Page(
                     //    "/Account/ConfirmEmail",
                     //    pageHandler: null,

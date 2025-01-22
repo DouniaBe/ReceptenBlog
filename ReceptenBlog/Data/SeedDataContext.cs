@@ -1,8 +1,9 @@
 ﻿using ReceptenBlog.Models;
 using Microsoft.EntityFrameworkCore;
 using ReceptenBlog.Data;
+using Microsoft.AspNetCore.Identity;
 
-namespace RecipesBlog.Data
+namespace ReceptenBlog.Data
 {
     public class SeedDataContext
     {
@@ -30,6 +31,19 @@ namespace RecipesBlog.Data
                 );
                 context.SaveChanges();
             }
+           
+
+            if (!context.Roles.Any())
+            {
+                context.Roles.AddRange(
+                    new IdentityRole { Id = "User", Name = "User", NormalizedName = "USER" },
+                    new IdentityRole { Id = "UserAdmin", Name = "UserAdmin", NormalizedName = "USERADMIN" }
+                    );
+                context.SaveChanges();
+                context.UserRoles.Add(new IdentityUserRole<string> { RoleId = "User", UserId = "?" });
+              
+            }
+            context.SaveChanges();
         }
     }
 }
