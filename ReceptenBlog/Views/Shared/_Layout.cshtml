@@ -1,4 +1,7 @@
 ﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,16 +30,16 @@
                            
               
                          <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">Recipe</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">@_localizer["Recipe"]</a>
                         </li>
                             if (User.IsInRole("UserAdmin"))
                             {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Category</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">@_localizer["Category"]</a>
                         </li>
                             }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">comment</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Comments" asp-action="Index">@_localizer["comment"]</a>
                         </li>
                         } 
                         <li class="nav-item">

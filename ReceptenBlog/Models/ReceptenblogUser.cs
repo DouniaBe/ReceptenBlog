@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReceptenBlog.Models
 {
@@ -11,5 +12,9 @@ namespace ReceptenBlog.Models
 
         [Required] 
         public string LastName { get; set; }
+        [Required]
+        [StringLength(2)]
+        [ForeignKey("Languages")]
+        public string LanguageCode { get; set; } = "?";
     }
 }

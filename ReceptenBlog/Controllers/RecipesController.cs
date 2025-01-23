@@ -7,6 +7,8 @@ using ReceptenBlog.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+
 
 namespace ReceptenBlog.Controllers
 {
@@ -14,10 +16,14 @@ namespace ReceptenBlog.Controllers
     public class RecipesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IStringLocalizer<RecipesController> _localizer;
 
-        public RecipesController(ApplicationDbContext context)
+        public RecipesController(ApplicationDbContext context, IStringLocalizer<RecipesController> localizer)
+
         {
             _context = context;
+            _localizer = localizer;
+
         }
 
         // GET: Recipes

@@ -12,6 +12,20 @@ namespace ReceptenBlog.Data
             context.Database.EnsureCreated();
             context.Database.Migrate();
 
+            if (!context.Language.Any())
+            {
+                context.Language.AddRange(
+                    new Language(),
+                    new Language { Code = "en", IsSystemLanguage = true, Name = "English" },
+                    new Language { Code = "fr", IsSystemLanguage = true, Name = "français" },
+                    new Language { Code = "nl", IsSystemLanguage = true, Name = "Nederlands" }
+                    );
+                context.SaveChanges();
+            }
+
+            Language.Languages = context.Language.Where(l => l.IsSystemLanguage && l.Code != "? ").ToList();
+
+
             if (!context.Category.Any())
             {
                 context.Category.AddRange(

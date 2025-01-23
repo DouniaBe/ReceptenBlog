@@ -14,5 +14,6 @@ namespace ReceptenBlog.Data
         public DbSet<ReceptenBlog.Models.Recipe> Recipe { get; set; } = default!;
         public DbSet<ReceptenBlog.Models.Category> Category { get; set; } = default!;
         public DbSet<ReceptenBlog.Models.Comment> Comment { get; set; } = default!;
+        public DbSet<ReceptenBlog.Models.Language> Language { get; set; } = default!;
     }
 }
