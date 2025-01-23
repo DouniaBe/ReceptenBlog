@@ -22,16 +22,16 @@ namespace ReceptenBlog.Data
                 context.SaveChanges();
             }
 
-            if (!context.Recipe.Any())
-            {
-                var defaultCategory = context.Category.FirstOrDefault(c => c.Name == "Main Course");
-                context.Recipe.AddRange(
-                    new Recipe { Name = "Spaghetti Bolognese", Description = "A classic Italian dish", Ingredients = "Spaghetti, minced beef, tomato sauce", Instructions = "Cook spaghetti, prepare sauce, combine" },
-                    new Recipe { Name = "Chocolate Cake", Description = "Rich and moist cake", Ingredients = "Flour, cocoa, sugar, eggs, butter", Instructions = "Mix ingredients, bake at 180°C" }
-                );
-                context.SaveChanges();
-            }
-           
+            //if (!context.Recipe.Any())
+            //{
+            //    var defaultCategory = context.Category.FirstOrDefault(c => c.Name == "Main Course");
+            //    context.Recipe.AddRange(
+            //        new Recipe { Name = "Spaghetti Bolognese", Description = "A classic Italian dish", Ingredients = "Spaghetti, minced beef, tomato sauce", Instructions = "Cook spaghetti, prepare sauce, combine" },
+            //        new Recipe { Name = "Chocolate Cake", Description = "Rich and moist cake", Ingredients = "Flour, cocoa, sugar, eggs, butter", Instructions = "Mix ingredients, bake at 180°C" }
+            //    );
+            //    context.SaveChanges();
+            //}
+
 
             if (!context.Roles.Any())
             {
@@ -41,7 +41,7 @@ namespace ReceptenBlog.Data
                     );
                 context.SaveChanges();
                 context.UserRoles.Add(new IdentityUserRole<string> { RoleId = "User", UserId = "?" });
-              
+
             }
             context.SaveChanges();
         }
